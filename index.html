@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شمبر للعطور</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#10202d;
+  color:#f7f7f7;
+  overflow-x:hidden;
+}
+
+/* LOADER مع تظليل */
+#loader{
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.4); /* تظليل */
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.snake{
+  width:60px;
+  height:60px;
+  border:5px solid #c7a667;
+  border-radius:50%;
+  border-top-color:transparent;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  0%{ transform: rotate(0deg);}
+  100%{ transform: rotate(360deg);}
+}
+
+.loader-text{
+  font-size:24px;
+  font-weight:bold;
+  text-shadow:0 0 5px #c7a667,0 0 15px #c7a667;
+  margin-top:10px;
+}
+
+/* HEADER */
+header{
+  padding:15px;
+  text-align:center;
+  background:#10202d;
+  position:relative;
+  z-index:1;
+}
+
+.cartBtn{
+  position:absolute;
+  left:10px;
+  top:10px;
+  background:#c7a667;
+  border:none;
+  padding:8px;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+/* NAV */
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:10px;
+  background:#10202d;
+  z-index:1;
+}
+
+.nav button{
+  background:#c7a667;
+  border:none;
+  padding:8px 15px;
+  color:#10202d;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+/* PRODUCTS */
+.container{padding:15px;}
+
+.products{
+  display:none;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  min-height:300px;
+  background-size:cover;
+  background-position:center;
+  border-radius:10px;
+  padding:15px;
+}
+
+.products.active{
+  display:grid;
+  animation:fade 0.4s;
+}
+
+.card{
+  background: rgba(16,32,45,0.85);
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+  transition:0.3s;
+  border:1px solid #c7a667;
+}
+
+.card:hover{transform:scale(1.05);}
+
+.product-img{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+.desc{
+  font-size:12px;
+  opacity:0.9;
+}
+
+.price{
+  color:#c7a667;
+  font-weight:bold;
+}
+
+button{
+  margin-top:8px;
+  padding:7px;
+  border:none;
+  background:#c7a667;
+  color:#10202d;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+/* CART */
+.cartPopup{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:flex-end;
+  z-index:999;
+}
+
+.cartBox{
+  background:#10202d;
+  width:100%;
+  max-width:400px;
+  border-radius:20px 20px 0 0;
+  padding:15px;
+  animation:slideUp 0.4s;
+  border:1px solid #c7a667;
+}
+
+@keyframes slideUp{
+from{transform:translateY(100%);}
+to{transform:translateY(0);}
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#c7a667;
+  padding:10px;
+  border-radius:5px;
+  display:none;
+  color:#10202d;
+}
+.copyBtn{background:#c7a667;color:#10202d;}
+.phoneBtn{background:#c7a667;color:#10202d;}
+.closeBtn{background:red;color:#fff;}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="snake"></div>
+  <div class="loader-text">شمبر</div>
+</div>
+
+<header>
+✨ شمبر ✨
+<button class="cartBtn" onclick="toggleCart()">🛒</button>
+</header>
+
+<div class="nav">
+<button onclick="switchSection('men')">رجالي</button>
+<button onclick="switchSection('women')">نسائي</button>
+<button onclick="switchSection('unisex')">للجنسين</button>
+</div>
+
+<div class="container">
+<div id="men" class="products active"></div>
+<div id="women" class="products"></div>
+<div id="unisex" class="products"></div>
+</div>
+
+<!-- CART -->
+<div class="cartPopup" id="cartPopup">
+<div class="cartBox" id="cartBox">
+<h3>🛒 السلة</h3>
+<div id="cartItems"></div>
+<h4 id="total"></h4>
+<button onclick="copyOrder()" class="copyBtn">📋 نسخ الطلب</button>
+<button onclick="copyPhone()" class="phoneBtn">📞 نسخ الرقم</button>
+<button onclick="toggleCart()" class="closeBtn">❌ إغلاق</button>
+</div>
+</div>
+
+<div class="toast" id="toast">تمت الإضافة ✅</div>
+
+<script>
+/* المنتجات */
+const products = [
+{ id:1, name:"Dior Sauvage", price:50, image:"kimo1.jpg", desc:"عطر رجالي فاخر ", category:"men"},
+{ id:1, name:"Dior Sauvage", price:200, image:"kimo2.jpg", desc:"عطر رجالي فاخر ", category:"men"},
+{ id:1, name:"Dior Sauvage", price:170, image:"kimo3.jpg", desc:"عطر رجالي فاخر ", category:"men"},
+{ id:1, name:"Dior Sauvage", price:130, image:"kimo4.jpg", desc:"عطر رجالي فاخر ", category:"men"},
+{ id:1, name:"Dior Sauvage", price:80, image:"kimo5.jpg", desc:"عطر رجالي فاخر ", category:"men"},
+
+{ id:2, name:"Bleu de Chanel", price:60, image:"images/bleu.jpg", desc:"رائحة قوية وجذابة", category:"men"},
+{ id:3, name:"Chanel No.5", price:250, image:"kimo$1.jpg", desc:"عطر نسائي أنيق 🌸", category:"women"},
+{ id:3, name:"Chanel No.5", price:180, image:"kimo$2.jpg", desc:"عطر نسائي أنيق 🌸", category:"women"},
+{ id:3, name:"Chanel No.5", price:90, image:"kimo$3.jpg", desc:"عطر نسائي أنيق 🌸", category:"women"},
+{ id:3, name:"Chanel No.5", price:70, image:"kimo$4.jpg", desc:"عطر نسائي أنيق 🌸", category:"women"},
+{ id:3, name:"Chanel No.5", price:65, image:"kimo$5.jpg", desc:"عطر نسائي أنيق 🌸", category:"women"},
+
+{ id:4, name:"Tom Ford Oud", price:80, image:"images/tomford.jpg", desc:"للجنسين فاخر", category:"unisex"}
+];
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+function saveCart(){ localStorage.setItem("cart", JSON.stringify(cart)); }
+
+/* عرض المنتجات */
+function renderProducts(){
+["men","women","unisex"].forEach(cat=>{
+let container = document.getElementById(cat);
+container.innerHTML="";
+let bg="";
+if(cat=="men") bg="url('images/bg_men.jpg')";
+else if(cat=="women") bg="url('images/bg_women.jpg')";
+else bg="url('images/bg_unisex.jpg')";
+container.style.background=bg;
+
+products.filter(p=>p.category===cat).forEach(p=>{
+container.innerHTML += `
+<div class="card">
+<img src="${p.image}" class="product-img">
+<h4>${p.name}</h4>
+<p class="desc">${p.desc}</p>
+<p class="price">${p.price}$</p>
+<button onclick="addToCart(${p.id})">إضافة</button>
+</div>
+`;
+});
+});
+}
+
+/* عرض السلة */
+function displayCart(){
+let div=document.getElementById("cartItems");
+let total=0;
+div.innerHTML="";
+cart.forEach(i=>{
+total+=i.price*i.qty;
+div.innerHTML+=`<p>📦 ${i.name} | ${i.price}$ × ${i.qty}</p>`;
+});
+document.getElementById("total").innerText="💵 الإجمالي: "+total+"$";
+}
+
+/* السلة */
+function toggleCart(){
+let c=document.getElementById("cartPopup");
+c.style.display=(c.style.display==="flex")?"none":"flex";
+displayCart();
+}
+
+/* إضافة للسلة */
+function addToCart(id){
+let product = products.find(p=>p.id===id);
+let item = cart.find(i=>i.id===id);
+if(item){ item.qty++; }else{ cart.push({...product, qty:1}); }
+saveCart(); displayCart(); showToast();
+}
+
+/* نسخ */
+function generateMessage(){
+let msg="طلب من شمبر:\n\n"; let total=0;
+cart.forEach(i=>{ total+=i.price*i.qty; msg+=`اسم: ${i.name}\nسعر: ${i.price}$\nكمية: ${i.qty}\n\n`; });
+msg+="الإجمالي: "+total+"$"; return msg;
+}
+function copyOrder(){ navigator.clipboard.writeText(generateMessage()); alert("تم نسخ الطلب"); }
+function copyPhone(){ navigator.clipboard.writeText("0114132942"); alert("تم نسخ الرقم"); }
+
+/* إشعار */
+function showToast(){ let t=document.getElementById("toast"); t.style.display="block"; setTimeout(()=>t.style.display="none",1500); }
+
+/* Loader Snake */
+const loader=document.getElementById("loader");
+function showLoader(callback){
+  loader.style.display="flex";
+  const randomTime = Math.floor(Math.random()*5000)+1000; // 1-6 ثواني
+  setTimeout(()=>{
+    loader.style.display="none";
+    callback();
+  }, randomTime);
+}
+
+/* التنقل بين الأقسام */
+function switchSection(cat){ showLoader(()=>showSection(cat)); }
+function showSection(id){ document.querySelectorAll(".products").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
+
+/* تشغيل */
+renderProducts();
+displayCart();
+showLoader(()=>{}); // أول تحميل
+</script>
+
+</body>
+</html>
