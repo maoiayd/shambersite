@@ -41,7 +41,7 @@ button{margin-top:8px;padding:7px;border:none;background:#c7a667;color:#10202d;b
 /* Cart Fixed Bottom */
 .cartPopup{
   position:fixed;
-  bottom:20px; /* قريب من أسفل الشاشة */
+  bottom:20px;
   left:50%;
   transform:translateX(-50%);
   background:rgba(16,32,45,0.95);
@@ -51,13 +51,15 @@ button{margin-top:8px;padding:7px;border:none;background:#c7a667;color:#10202d;b
   border:2px solid #c7a667;
   width:90%;
   max-width:450px;
-  display:none; /* تبدأ مخفية */
+  display:none;
   box-shadow:0 0 15px #c7a667;
 }
 .cartPopup h3{text-align:center;margin-bottom:15px;}
 .cartPopup #cartItems p{margin:8px 0;font-weight:bold;}
 .cartPopup #total{font-weight:bold;margin-top:10px;text-align:center;font-size:16px;}
 .cartPopup input{width:100%;margin:8px 0;padding:10px;border-radius:5px;border:none;background:#f7f7f7;color:#10202d;}
+.cartPopup label{display:flex;align-items:center;margin:5px 0;}
+.cartPopup label input[type="checkbox"]{margin-left:10px;}
 .cartPopup button{width:32%;margin:5px 1%;padding:10px;font-weight:bold;}
 
 /* Toast */
@@ -99,6 +101,7 @@ button{margin-top:8px;padding:7px;border:none;background:#c7a667;color:#10202d;b
 <h4 id="total"></h4>
 <input type="text" id="userName" placeholder="اسمك">
 <input type="text" id="userPhone" placeholder="رقم الهاتف">
+<label><input type="checkbox" id="delivery"> توصيل</label>
 <button onclick="sendOrder()">إتمام الطلب</button>
 <button onclick="toggleCart()">❌ إغلاق</button>
 </div>
@@ -163,11 +166,16 @@ function toggleCart(){
 }
 
 function addToCart(id){
-let product=products.find(p=>p.id===id);
-let item=cart.find(i=>i.id===id);
-if(item){item.qty++;}else{cart.push({...product,qty:1});}
+let product = products.find(p => p.id === id);
+let item = cart.find(i => i.id === id);
+if(item){ 
+    item.qty++; 
+} else { 
+    cart.push({...product, qty:1}); 
+}
 saveCart();
 showToast();
+displayCart(); // تحديث السلة فقط إذا كانت مفتوحة
 }
 
 function showToast(){
@@ -188,12 +196,27 @@ function switchSection(cat){
   }, randomTime);
 }
 
-/* Send Order via WhatsApp */
+/* Send Order via WhatsApp with Location */
 function sendOrder(){
   let name=document.getElementById("userName").value;
   let phone=document.getElementById("userPhone").value;
+  let delivery=document.getElementById("delivery").checked;
   if(!name||!phone){alert("املأ الاسم ورقم الهاتف");return;}
   if(cart.length===0){alert("السلة فارغة");return;}
+
+  if(delivery && navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(position => {
+      sendWhatsApp(name, phone, position.coords.latitude, position.coords.longitude);
+    }, error => {
+      alert("تعذر الحصول على الموقع الحالي");
+      sendWhatsApp(name, phone);
+    });
+  } else {
+    sendWhatsApp(name, phone);
+  }
+}
+
+function sendWhatsApp(name, phone, lat=null, lon=null){
   let message="طلب جديد من شمبر للعطور:\n";
   message+="الاسم: "+name+"\nرقم الهاتف: "+phone+"\n\n";
   let total=0;
@@ -202,6 +225,8 @@ function sendOrder(){
     total+=item.price*item.qty;
   });
   message+="\n💵 المجموع: "+total+"$";
+  if(lat && lon) message+=`\n📍 الموقع: https://www.google.com/maps?q=${lat},${lon}`;
+  
   window.open("https://wa.me/249994501781?text="+encodeURIComponent(message),"_blank");
 
   // بعد الإرسال: مسح السلة
