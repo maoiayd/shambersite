@@ -9,12 +9,12 @@ body{margin:0;font-family:Arial;background:#10202d;color:#f7f7f7;overflow-x:hidd
 
 /* Loader */
 #loader{
-  position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);
-  display:flex;justify-content:center;align-items:center;z-index:9999;flex-direction:column;
+position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);
+display:flex;justify-content:center;align-items:center;z-index:9999;flex-direction:column;
 }
 .snake{
-  width:60px;height:60px;border:5px solid #c7a667;border-radius:50%;border-top-color:transparent;
-  animation:spin 1s linear infinite;
+width:60px;height:60px;border:5px solid #c7a667;border-radius:50%;border-top-color:transparent;
+animation:spin 1s linear infinite;
 }
 @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 .loader-text{font-size:24px;font-weight:bold;text-shadow:0 0 5px #c7a667,0 0 15px #c7a667;margin-top:10px;}
@@ -40,16 +40,25 @@ button{margin-top:8px;padding:7px;border:none;background:#c7a667;color:#10202d;b
 
 /* Cart Fixed Bottom */
 .cartPopup{
-  position:fixed; bottom:50%; left:50%; transform:translate(-50%,50%);
-  background:rgba(16,32,45,0.95); padding:15px; border-radius:15px;
-  z-index:999; border:1px solid #c7a667; width:95%; max-width:400px;
-  display:none;
+  position:fixed;
+  bottom:20px; /* قريب من أسفل الشاشة */
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(16,32,45,0.95);
+  padding:20px;
+  border-radius:15px;
+  z-index:999;
+  border:2px solid #c7a667;
+  width:90%;
+  max-width:450px;
+  display:none; /* تبدأ مخفية */
+  box-shadow:0 0 15px #c7a667;
 }
-.cartPopup h3{text-align:center;margin-bottom:10px;}
-.cartPopup #cartItems p{margin:5px 0;}
-.cartPopup #total{font-weight:bold;margin-top:10px;text-align:center;}
-.cartPopup input{width:100%;margin:5px 0;padding:8px;border-radius:5px;border:none;}
-.cartPopup button{width:32%;margin:3px 1%;}
+.cartPopup h3{text-align:center;margin-bottom:15px;}
+.cartPopup #cartItems p{margin:8px 0;font-weight:bold;}
+.cartPopup #total{font-weight:bold;margin-top:10px;text-align:center;font-size:16px;}
+.cartPopup input{width:100%;margin:8px 0;padding:10px;border-radius:5px;border:none;background:#f7f7f7;color:#10202d;}
+.cartPopup button{width:32%;margin:5px 1%;padding:10px;font-weight:bold;}
 
 /* Toast */
 .toast{position:fixed;top:20px;right:20px;background:#c7a667;padding:10px;border-radius:5px;display:none;color:#10202d;}
@@ -112,7 +121,7 @@ const products=[
 { id:12,name:"Bleu de Chanel",price:60,image:"kimo12.jpg",desc:"للجنسين",category:"unisex"}
 ];
 
-let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let cart=[]; // تبدأ السلة فارغة
 function saveCart(){localStorage.setItem("cart",JSON.stringify(cart));}
 
 function renderProducts(){
@@ -148,7 +157,7 @@ function toggleCart(){
   if(c.style.display==="block"){
     c.style.display="none";
   } else {
-    displayCart(); // عرض البيانات عند الفتح
+    displayCart();
     c.style.display="block";
   }
 }
@@ -163,7 +172,7 @@ showToast();
 
 function showToast(){
 let t=document.getElementById("toast");
-t.style.display="block"; 
+t.style.display="block";   
 setTimeout(()=>t.style.display="none",1500);
 }
 
@@ -194,6 +203,11 @@ function sendOrder(){
   });
   message+="\n💵 المجموع: "+total+"$";
   window.open("https://wa.me/249994501781?text="+encodeURIComponent(message),"_blank");
+
+  // بعد الإرسال: مسح السلة
+  cart=[];
+  saveCart();
+  displayCart();
 }
 
 renderProducts();
