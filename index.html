@@ -1,243 +1,382 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
- <meta name="google-site-verification" content="32TBn96mF_2m62r_RpfN8jF90zCbm0-7mDug6i3ZAYw" /> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>شمبر للعطور</title>
+<title>AI Ad Designer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
-body{margin:0;font-family:Arial;background:#10202d;color:#f7f7f7;overflow-x:hidden;}
 
-/* Loader */
-#loader{
-position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);
-display:flex;justify-content:center;align-items:center;z-index:9999;flex-direction:column;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Cairo',sans-serif;
 }
-.snake{
-width:60px;height:60px;border:5px solid #c7a667;border-radius:50%;border-top-color:transparent;
-animation:spin 1s linear infinite;
+
+body{
+    background:#0f172a;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    overflow:hidden;
 }
-@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-.loader-text{font-size:24px;font-weight:bold;text-shadow:0 0 5px #c7a667,0 0 15px #c7a667;margin-top:10px;}
 
-/* Header */
-header{padding:15px;text-align:center;position:relative;z-index:1;}
-.cartBtn{position:absolute;left:10px;top:10px;background:#c7a667;border:none;padding:8px;border-radius:50%;cursor:pointer;}
-
-/* Nav */
-.nav{display:flex;justify-content:center;gap:10px;padding:10px;background:#10202d;z-index:1;}
-.nav button{background:#c7a667;border:none;padding:8px 15px;color:#10202d;border-radius:20px;cursor:pointer;}
-
-/* Container */
-.container{padding:15px;}
-.products{display:none;grid-template-columns:repeat(2,1fr);gap:15px;min-height:300px;}
-.products.active{display:grid;animation:fade 0.4s;}
-.card{background: rgba(16,32,45,0.85);padding:10px;border-radius:10px;text-align:center;transition:0.3s;border:1px solid #c7a667;}
-.card:hover{transform:scale(1.05);}
-.product-img{width:100%;height:120px;object-fit:cover;border-radius:10px;}
-.desc{font-size:12px;opacity:0.9;}
-.price{color:#c7a667;font-weight:bold;}
-button{margin-top:8px;padding:7px;border:none;background:#c7a667;color:#10202d;border-radius:5px;cursor:pointer;}
-
-/* Cart Fixed Bottom */
-.cartPopup{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(16,32,45,0.95);
-  padding:20px;
-  border-radius:15px;
-  z-index:999;
-  border:2px solid #c7a667;
-  width:90%;
-  max-width:450px;
-  display:none;
-  box-shadow:0 0 15px #c7a667;
+.container{
+    width:100%;
+    max-width:1400px;
+    display:grid;
+    grid-template-columns:350px 1fr;
+    gap:20px;
 }
-.cartPopup h3{text-align:center;margin-bottom:15px;}
-.cartPopup #cartItems p{margin:8px 0;font-weight:bold;}
-.cartPopup #total{font-weight:bold;margin-top:10px;text-align:center;font-size:16px;}
-.cartPopup input{width:100%;margin:8px 0;padding:10px;border-radius:5px;border:none;background:#f7f7f7;color:#10202d;}
-.cartPopup label{display:flex;align-items:center;margin:5px 0;}
-.cartPopup label input[type="checkbox"]{margin-left:10px;}
-.cartPopup button{width:32%;margin:5px 1%;padding:10px;font-weight:bold;}
 
-/* Toast */
-.toast{position:fixed;top:20px;right:20px;background:#c7a667;padding:10px;border-radius:5px;display:none;color:#10202d;}
+.panel{
+    background:#111827;
+    padding:25px;
+    border-radius:25px;
+    color:white;
+    box-shadow:0 0 40px rgba(0,0,0,.4);
+}
 
-/* Animations */
-@keyframes fade{0%{opacity:0;}100%{opacity:1;}}
+.panel h2{
+    margin-bottom:20px;
+    font-size:30px;
+}
+
+.upload{
+    border:2px dashed #374151;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+    margin-bottom:20px;
+}
+
+.upload:hover{
+    background:#1f2937;
+}
+
+.upload input{
+    display:none;
+}
+
+textarea{
+    width:100%;
+    height:130px;
+    border:none;
+    outline:none;
+    resize:none;
+    border-radius:18px;
+    padding:15px;
+    background:#1f2937;
+    color:white;
+    font-size:18px;
+    margin-bottom:20px;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(45deg,#ff0055,#ff7b00);
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    transform:translateY(-3px);
+}
+
+.editor{
+    position:relative;
+    height:750px;
+    border-radius:30px;
+    overflow:hidden;
+    background:#111;
+    box-shadow:0 0 50px rgba(0,0,0,.5);
+}
+
+.editor img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:
+    brightness(.75)
+    contrast(1.1)
+    saturate(1.2);
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:
+    linear-gradient(to top,
+    rgba(0,0,0,.85),
+    rgba(0,0,0,.15)),
+    linear-gradient(to right,
+    rgba(255,0,85,.25),
+    transparent);
+    backdrop-filter:blur(1px);
+}
+
+.glow{
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:#ff0055;
+    filter:blur(140px);
+    opacity:.25;
+    top:-100px;
+    left:-100px;
+}
+
+.ad-text{
+    position:absolute;
+    right:60px;
+    bottom:60px;
+    max-width:70%;
+    color:white;
+    font-size:55px;
+    font-weight:900;
+    line-height:1.3;
+    cursor:move;
+    z-index:5;
+
+    text-shadow:
+    0 5px 20px rgba(0,0,0,.7),
+    0 0 25px rgba(255,255,255,.15);
+
+    animation:fadeUp .7s ease;
+}
+
+.badge{
+    position:absolute;
+    top:30px;
+    left:30px;
+    background:linear-gradient(45deg,#ff0055,#ff7b00);
+    color:white;
+    padding:12px 24px;
+    border-radius:50px;
+    font-weight:bold;
+    z-index:10;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.download{
+    margin-top:15px;
+    background:linear-gradient(45deg,#00c853,#00e676);
+}
+
+@media(max-width:900px){
+
+.container{
+    grid-template-columns:1fr;
+}
+
+.editor{
+    height:500px;
+}
+
+.ad-text{
+    font-size:35px;
+    right:25px;
+    bottom:25px;
+}
+
+}
+
 </style>
 </head>
 <body>
 
-<!-- Loader -->
-<div id="loader">
-  <div class="snake"></div>
-  <div class="loader-text">شمبر</div>
-</div>
-
-<header>
-✨ شمبر ✨
-<button class="cartBtn" onclick="toggleCart()">🛒</button>
-</header>
-
-<div class="nav">
-<button onclick="switchSection('men')">رجالي</button>
-<button onclick="switchSection('women')">نسائي</button>
-<button onclick="switchSection('unisex')">للجنسين</button>
-</div>
-
 <div class="container">
-<div id="men" class="products active"></div>
-<div id="women" class="products"></div>
-<div id="unisex" class="products"></div>
+
+    <div class="panel">
+
+        <h2>مصمم الإعلانات</h2>
+
+        <label class="upload">
+
+            <input type="file" id="imageInput" accept="image/*">
+
+            <h3>ارفع صورة</h3>
+            <p>اختار صورة الإعلان</p>
+
+        </label>
+
+        <textarea id="textInput"
+        placeholder="اكتب نص العرض هنا..."></textarea>
+
+        <button id="generateBtn">
+            إنشاء الإعلان
+        </button>
+
+        <button class="download" id="downloadBtn">
+            تحميل التصميم
+        </button>
+
+    </div>
+
+    <div class="editor" id="capture">
+
+        <div class="glow"></div>
+
+        <img id="image">
+
+        <div class="overlay"></div>
+
+        <div class="badge">
+            OFFER
+        </div>
+
+        <div class="ad-text" id="adText">
+            نص الإعلان
+        </div>
+
+    </div>
+
 </div>
 
-<!-- Cart -->
-<div class="cartPopup" id="cartPopup">
-<h3>🛒 السلة</h3>
-<div id="cartItems"></div>
-<h4 id="total"></h4>
-<input type="text" id="userName" placeholder="اسمك">
-<input type="text" id="userPhone" placeholder="رقم الهاتف">
-<label><input type="checkbox" id="delivery"> توصيل</label>
-<button onclick="sendOrder()">إتمام الطلب</button>
-<button onclick="toggleCart()">❌ إغلاق</button>
-</div>
-
-<div class="toast" id="toast">تمت الإضافة ✅</div>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <script>
-const products=[
-{ id:1,name:"باريس",price:50,image:"kimo1.jpg",desc:"عطر رجالي",category:"men"},
-{ id:2,name:"الاحلام",price:200,image:"kimo2.jpg",desc:"عطر رجالي",category:"men"},
-{ id:3,name:"هدوئ اليلي",price:170,image:"kimo3.jpg",desc:"عطر رجالي",category:"men"},
-{ id:4,name:"الاسد",price:130,image:"kimo4.jpg",desc:"عطر رجالي",category:"men"},
-{ id:5,name:"الفارس",price:80,image:"kimo5.jpg",desc:"عطر رجالي",category:"men"},
-{ id:6,name:"الانوثه",price:250,image:"kimo6.jpg",desc:"عطر نسائي",category:"women"},
-{ id:7,name:"الاميره",price:180,image:"kimo7.jpg",desc:"عطر نسائي",category:"women"},
-{ id:8,name:"زهرة الوتس",price:90,image:"kimo8.jpg",desc:"عطر نسائي",category:"women"},
-{ id:9,name:"رياح الجنوب",price:70,image:"kimo9.jpg",desc:"عطر نسائي",category:"women"},
-{ id:10,name:"البنفسج",price:65,image:"kimo10.jpg",desc:"عطر نسائي",category:"women"},
-{ id:11,name:"Tom Ford Oud",price:80,image:"kimo11.jpg",desc:"للجنسين",category:"unisex"},
-{ id:12,name:"Bleu de Chanel",price:60,image:"kimo12.jpg",desc:"للجنسين",category:"unisex"}
-];
 
-let cart=[]; // تبدأ السلة فارغة
-function saveCart(){localStorage.setItem("cart",JSON.stringify(cart));}
+const imageInput = document.getElementById("imageInput");
+const image = document.getElementById("image");
+const textInput = document.getElementById("textInput");
+const adText = document.getElementById("adText");
 
-function renderProducts(){
-["men","women","unisex"].forEach(cat=>{
-let container=document.getElementById(cat);
-container.innerHTML="";
-products.filter(p=>p.category===cat).forEach(p=>{
-container.innerHTML+=`
-<div class="card">
-<img src="${p.image}" class="product-img">
-<h4>${p.name}</h4>
-<p class="desc">${p.desc}</p>
-<p class="price">${p.price}$</p>
-<button onclick="addToCart(${p.id})">إضافة</button>
-</div>`;
+imageInput.addEventListener("change", e=>{
+
+    const file = e.target.files[0];
+
+    if(file){
+
+        const reader = new FileReader();
+
+        reader.onload = ev=>{
+
+            image.src = ev.target.result;
+
+        }
+
+        reader.readAsDataURL(file);
+
+    }
+
 });
+
+document.getElementById("generateBtn")
+.addEventListener("click", ()=>{
+
+    adText.innerHTML = textInput.value;
+
 });
-}
 
-/* Cart */
-function displayCart(){
-let div=document.getElementById("cartItems");
-let total=0;div.innerHTML="";
-cart.forEach(i=>{
-  total+=i.price*i.qty;
-  div.innerHTML+=`<p>📦 ${i.name} × ${i.qty} = ${i.price*i.qty}$</p>`;
-});
-document.getElementById("total").innerText="💵 الإجمالي: "+total+"$";
-}
+document.getElementById("downloadBtn")
+.addEventListener("click", ()=>{
 
-function toggleCart(){
-  let c=document.getElementById("cartPopup");
-  if(c.style.display==="block"){
-    c.style.display="none";
-  } else {
-    displayCart();
-    c.style.display="block";
-  }
-}
+    html2canvas(document.getElementById("capture"))
+    .then(canvas=>{
 
-function addToCart(id){
-let product = products.find(p => p.id === id);
-let item = cart.find(i => i.id === id);
-if(item){ 
-    item.qty++; 
-} else { 
-    cart.push({...product, qty:1}); 
-}
-saveCart();
-showToast();
-displayCart(); // تحديث السلة فقط إذا كانت مفتوحة
-}
+        const link = document.createElement("a");
 
-function showToast(){
-let t=document.getElementById("toast");
-t.style.display="block";   
-setTimeout(()=>t.style.display="none",1500);
-}
+        link.download = "ad-design.png";
 
-/* Loader & Switch Sections */
-const loader=document.getElementById("loader");
-function switchSection(cat){
-  loader.style.display="flex";
-  let randomTime=Math.floor(Math.random()*5000)+1000;
-  setTimeout(()=>{
-    document.querySelectorAll(".products").forEach(s=>s.classList.remove("active"));
-    document.getElementById(cat).classList.add("active");
-    loader.style.display="none";
-  }, randomTime);
-}
+        link.href = canvas.toDataURL();
 
-/* Send Order via WhatsApp with Location */
-function sendOrder(){
-  let name=document.getElementById("userName").value;
-  let phone=document.getElementById("userPhone").value;
-  let delivery=document.getElementById("delivery").checked;
-  if(!name||!phone){alert("املأ الاسم ورقم الهاتف");return;}
-  if(cart.length===0){alert("السلة فارغة");return;}
+        link.click();
 
-  if(delivery && navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(position => {
-      sendWhatsApp(name, phone, position.coords.latitude, position.coords.longitude);
-    }, error => {
-      alert("تعذر الحصول على الموقع الحالي");
-      sendWhatsApp(name, phone);
     });
-  } else {
-    sendWhatsApp(name, phone);
-  }
+
+});
+
+
+
+/* DRAG TEXT */
+
+let isDragging = false;
+
+let offsetX, offsetY;
+
+adText.addEventListener("mousedown", startDrag);
+adText.addEventListener("touchstart", startDrag);
+
+function startDrag(e){
+
+    isDragging = true;
+
+    const rect = adText.getBoundingClientRect();
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    offsetX = clientX - rect.left;
+    offsetY = clientY - rect.top;
+
 }
 
-function sendWhatsApp(name, phone, lat=null, lon=null){
-  let message="طلب جديد من شمبر للعطور:\n";
-  message+="الاسم: "+name+"\nرقم الهاتف: "+phone+"\n\n";
-  let total=0;
-  cart.forEach(item=>{
-    message+=`• ${item.name} × ${item.qty} = ${item.price*item.qty}$\n`;
-    total+=item.price*item.qty;
-  });
-  message+="\n💵 المجموع: "+total+"$";
-  if(lat && lon) message+=`\n📍 الموقع: https://www.google.com/maps?q=${lat},${lon}`;
-  
-  window.open("https://wa.me/249994501781?text="+encodeURIComponent(message),"_blank");
+document.addEventListener("mousemove", drag);
+document.addEventListener("touchmove", drag);
 
-  // بعد الإرسال: مسح السلة
-  cart=[];
-  saveCart();
-  displayCart();
+function drag(e){
+
+    if(!isDragging) return;
+
+    const editorRect =
+    document.querySelector(".editor")
+    .getBoundingClientRect();
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    adText.style.left =
+    (clientX - editorRect.left - offsetX) + "px";
+
+    adText.style.top =
+    (clientY - editorRect.top - offsetY) + "px";
+
+    adText.style.right = "auto";
+    adText.style.bottom = "auto";
+
 }
 
-renderProducts();
-loader.style.display="none";
+document.addEventListener("mouseup", ()=>{
+
+    isDragging = false;
+
+});
+
+document.addEventListener("touchend", ()=>{
+
+    isDragging = false;
+
+});
+
 </script>
+
 </body>
 </html>
