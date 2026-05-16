@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Ad Designer</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<title>منشئ الإعلانات الاحترافي</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -13,44 +14,43 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Cairo',sans-serif;
 }
 
 body{
     background:#0f172a;
+    font-family:'Cairo',sans-serif;
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     padding:20px;
-    overflow:hidden;
 }
 
 .container{
     width:100%;
     max-width:1400px;
     display:grid;
-    grid-template-columns:350px 1fr;
+    grid-template-columns:360px 1fr;
     gap:20px;
 }
 
 .panel{
     background:#111827;
+    border-radius:30px;
     padding:25px;
-    border-radius:25px;
     color:white;
-    box-shadow:0 0 40px rgba(0,0,0,.4);
+    box-shadow:0 0 50px rgba(0,0,0,.4);
 }
 
 .panel h2{
-    margin-bottom:20px;
     font-size:30px;
+    margin-bottom:20px;
 }
 
 .upload{
     border:2px dashed #374151;
-    padding:30px;
     border-radius:20px;
+    padding:30px;
     text-align:center;
     cursor:pointer;
     transition:.3s;
@@ -67,10 +67,10 @@ body{
 
 textarea{
     width:100%;
-    height:130px;
+    height:120px;
+    resize:none;
     border:none;
     outline:none;
-    resize:none;
     border-radius:18px;
     padding:15px;
     background:#1f2937;
@@ -79,17 +79,55 @@ textarea{
     margin-bottom:20px;
 }
 
+.controls{
+    display:grid;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.control-box{
+    background:#1f2937;
+    padding:15px;
+    border-radius:18px;
+}
+
+.control-box label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+select,
+input[type="color"]{
+    width:100%;
+    height:50px;
+    border:none;
+    border-radius:12px;
+    background:#374151;
+    color:white;
+    padding:10px;
+    font-size:16px;
+}
+
 button{
     width:100%;
-    padding:15px;
     border:none;
     border-radius:18px;
-    background:linear-gradient(45deg,#ff0055,#ff7b00);
+    padding:16px;
     color:white;
     font-size:18px;
     font-weight:bold;
     cursor:pointer;
     transition:.3s;
+}
+
+#createBtn{
+    background:linear-gradient(45deg,#ff0055,#ff7b00);
+}
+
+#downloadBtn{
+    background:linear-gradient(45deg,#00c853,#00e676);
+    margin-top:15px;
 }
 
 button:hover{
@@ -98,11 +136,11 @@ button:hover{
 
 .editor{
     position:relative;
-    height:750px;
-    border-radius:30px;
     overflow:hidden;
+    border-radius:35px;
     background:#111;
-    box-shadow:0 0 50px rgba(0,0,0,.5);
+    min-height:760px;
+    box-shadow:0 0 60px rgba(0,0,0,.5);
 }
 
 .editor img{
@@ -110,7 +148,7 @@ button:hover{
     height:100%;
     object-fit:cover;
     filter:
-    brightness(.75)
+    brightness(.7)
     contrast(1.1)
     saturate(1.2);
 }
@@ -118,14 +156,15 @@ button:hover{
 .overlay{
     position:absolute;
     inset:0;
+
     background:
     linear-gradient(to top,
-    rgba(0,0,0,.85),
+    rgba(0,0,0,.75),
     rgba(0,0,0,.15)),
+
     linear-gradient(to right,
-    rgba(255,0,85,.25),
+    rgba(255,0,85,.2),
     transparent);
-    backdrop-filter:blur(1px);
 }
 
 .glow{
@@ -134,60 +173,95 @@ button:hover{
     height:500px;
     background:#ff0055;
     filter:blur(140px);
-    opacity:.25;
-    top:-100px;
-    left:-100px;
+    opacity:.2;
+    top:-120px;
+    left:-120px;
 }
 
 .ad-text{
     position:absolute;
-    right:60px;
-    bottom:60px;
-    max-width:70%;
-    color:white;
-    font-size:55px;
-    font-weight:900;
-    line-height:1.3;
-    cursor:move;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
     z-index:5;
 
-    text-shadow:
-    0 5px 20px rgba(0,0,0,.7),
-    0 0 25px rgba(255,255,255,.15);
+    width:80%;
+    text-align:center;
 
-    animation:fadeUp .7s ease;
+    color:white;
+
+    font-size:60px;
+    font-weight:900;
+
+    line-height:1.3;
+
+    text-shadow:
+    0 5px 25px rgba(0,0,0,.8),
+    0 0 30px rgba(255,255,255,.15);
+
+    animation:show .7s ease;
 }
 
 .badge{
     position:absolute;
     top:30px;
     left:30px;
+
     background:linear-gradient(45deg,#ff0055,#ff7b00);
+
     color:white;
-    padding:12px 24px;
+
+    padding:12px 25px;
+
     border-radius:50px;
+
     font-weight:bold;
+
     z-index:10;
-    box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
 
-@keyframes fadeUp{
+.toast{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+
+    background:#00c853;
+    color:white;
+
+    padding:16px 28px;
+
+    border-radius:18px;
+
+    font-size:18px;
+    font-weight:bold;
+
+    opacity:0;
+    transform:translateY(30px);
+
+    transition:.4s;
+
+    z-index:999;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+@keyframes show{
 
     from{
         opacity:0;
-        transform:translateY(40px);
+        transform:
+        translate(-50%,-40%);
     }
 
     to{
         opacity:1;
-        transform:translateY(0);
+        transform:
+        translate(-50%,-50%);
     }
 
-}
-
-.download{
-    margin-top:15px;
-    background:linear-gradient(45deg,#00c853,#00e676);
 }
 
 @media(max-width:900px){
@@ -197,13 +271,11 @@ button:hover{
 }
 
 .editor{
-    height:500px;
+    min-height:500px;
 }
 
 .ad-text{
-    font-size:35px;
-    right:25px;
-    bottom:25px;
+    font-size:36px;
 }
 
 }
@@ -223,18 +295,54 @@ button:hover{
             <input type="file" id="imageInput" accept="image/*">
 
             <h3>ارفع صورة</h3>
-            <p>اختار صورة الإعلان</p>
+            <p>اضغط لاختيار الصورة</p>
 
         </label>
 
         <textarea id="textInput"
-        placeholder="اكتب نص العرض هنا..."></textarea>
+        placeholder="اكتب نص الإعلان هنا..."></textarea>
 
-        <button id="generateBtn">
+        <div class="controls">
+
+            <div class="control-box">
+
+                <label>لون النص</label>
+
+                <input type="color"
+                id="colorPicker"
+                value="#ffffff">
+
+            </div>
+
+            <div class="control-box">
+
+                <label>نوع الخط</label>
+
+                <select id="fontPicker">
+
+                    <option value="Cairo">
+                        Cairo
+                    </option>
+
+                    <option value="Tajawal">
+                        Tajawal
+                    </option>
+
+                    <option value="Almarai">
+                        Almarai
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <button id="createBtn">
             إنشاء الإعلان
         </button>
 
-        <button class="download" id="downloadBtn">
+        <button id="downloadBtn">
             تحميل التصميم
         </button>
 
@@ -244,7 +352,7 @@ button:hover{
 
         <div class="glow"></div>
 
-        <img id="image">
+        <img id="previewImage">
 
         <div class="overlay"></div>
 
@@ -253,23 +361,45 @@ button:hover{
         </div>
 
         <div class="ad-text" id="adText">
-            نص الإعلان
+            إعلانك هنا
         </div>
 
     </div>
 
 </div>
 
+<div class="toast" id="toast">
+    تم إنشاء إعلانك بنجاح
+</div>
+
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <script>
 
-const imageInput = document.getElementById("imageInput");
-const image = document.getElementById("image");
-const textInput = document.getElementById("textInput");
-const adText = document.getElementById("adText");
+const imageInput =
+document.getElementById("imageInput");
 
-imageInput.addEventListener("change", e=>{
+const previewImage =
+document.getElementById("previewImage");
+
+const textInput =
+document.getElementById("textInput");
+
+const adText =
+document.getElementById("adText");
+
+const colorPicker =
+document.getElementById("colorPicker");
+
+const fontPicker =
+document.getElementById("fontPicker");
+
+const toast =
+document.getElementById("toast");
+
+
+
+imageInput.addEventListener("change",e=>{
 
     const file = e.target.files[0];
 
@@ -279,7 +409,7 @@ imageInput.addEventListener("change", e=>{
 
         reader.onload = ev=>{
 
-            image.src = ev.target.result;
+            previewImage.src = ev.target.result;
 
         }
 
@@ -289,90 +419,62 @@ imageInput.addEventListener("change", e=>{
 
 });
 
-document.getElementById("generateBtn")
-.addEventListener("click", ()=>{
 
-    adText.innerHTML = textInput.value;
+
+document.getElementById("createBtn")
+.addEventListener("click",()=>{
+
+    adText.innerHTML =
+    textInput.value;
+
+    adText.style.color =
+    colorPicker.value;
+
+    adText.style.fontFamily =
+    fontPicker.value;
+
+    adText.style.animation = "none";
+
+    setTimeout(()=>{
+
+        adText.style.animation =
+        "show .7s ease";
+
+    },10);
+
+
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },2500);
 
 });
 
-document.getElementById("downloadBtn")
-.addEventListener("click", ()=>{
 
-    html2canvas(document.getElementById("capture"))
+
+document.getElementById("downloadBtn")
+.addEventListener("click",()=>{
+
+    html2canvas(
+    document.getElementById("capture"))
     .then(canvas=>{
 
-        const link = document.createElement("a");
+        const link =
+        document.createElement("a");
 
-        link.download = "ad-design.png";
+        link.download =
+        "professional-ad.png";
 
-        link.href = canvas.toDataURL();
+        link.href =
+        canvas.toDataURL();
 
         link.click();
 
     });
-
-});
-
-
-
-/* DRAG TEXT */
-
-let isDragging = false;
-
-let offsetX, offsetY;
-
-adText.addEventListener("mousedown", startDrag);
-adText.addEventListener("touchstart", startDrag);
-
-function startDrag(e){
-
-    isDragging = true;
-
-    const rect = adText.getBoundingClientRect();
-
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-    offsetX = clientX - rect.left;
-    offsetY = clientY - rect.top;
-
-}
-
-document.addEventListener("mousemove", drag);
-document.addEventListener("touchmove", drag);
-
-function drag(e){
-
-    if(!isDragging) return;
-
-    const editorRect =
-    document.querySelector(".editor")
-    .getBoundingClientRect();
-
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-    adText.style.left =
-    (clientX - editorRect.left - offsetX) + "px";
-
-    adText.style.top =
-    (clientY - editorRect.top - offsetY) + "px";
-
-    adText.style.right = "auto";
-    adText.style.bottom = "auto";
-
-}
-
-document.addEventListener("mouseup", ()=>{
-
-    isDragging = false;
-
-});
-
-document.addEventListener("touchend", ()=>{
-
-    isDragging = false;
 
 });
 
