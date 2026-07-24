@@ -3,226 +3,489 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>شمبر للعطور</title>
+<title>Nuzul | حجز الشقق الفاخرة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Arial;background:#10202d;color:#f7f7f7;overflow-x:hidden;}
+  :root{
+    --ink:#141313;
+    --charcoal:#1c1b1a;
+    --sand:#f3ede3;
+    --sand-2:#ece3d2;
+    --gold:#b08d4f;
+    --gold-light:#d4b378;
+    --muted:#6b675f;
+    --line:rgba(20,19,19,0.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Cairo','Tajawal',sans-serif; background:var(--sand); color:var(--ink);}
+  a{text-decoration:none; color:inherit;}
+  ul{list-style:none;}
+  img{display:block; width:100%; height:100%; object-fit:cover;}
 
-/* Loader */
-#loader{
-  position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);
-  display:flex;justify-content:center;align-items:center;z-index:9999;flex-direction:column;
-}
-.snake{
-  width:60px;height:60px;border:5px solid #c7a667;border-radius:50%;border-top-color:transparent;
-  animation:spin 1s linear infinite;
-}
-@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-.loader-text{font-size:24px;font-weight:bold;text-shadow:0 0 5px #c7a667,0 0 15px #c7a667;margin-top:10px;}
+  /* ===== الهيدر ===== */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(243,237,227,0.9); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-wrap{max-width:1240px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:18px 24px;}
+  .logo{font-size:1.4rem; font-weight:900; letter-spacing:1px;}
+  .logo span{color:var(--gold);}
+  .nav-links{display:flex; gap:34px; font-weight:600; font-size:0.95rem;}
+  .nav-links a{position:relative; padding:6px 0;}
+  .nav-links a::after{content:'';position:absolute;bottom:0;right:0;width:0;height:2px;background:var(--gold);transition:.3s;}
+  .nav-links a:hover::after{width:100%;}
+  .nav-btn{background:var(--ink); color:var(--sand); font-weight:800; padding:11px 26px; border-radius:2px; font-size:0.9rem; transition:.3s;}
+  .nav-btn:hover{background:var(--gold);}
+  .burger{display:none; font-size:1.6rem; background:none; border:none; cursor:pointer;}
 
-/* Header */
-header{padding:15px;text-align:center;position:relative;z-index:1;}
+  /* ===== الهيرو ===== */
+  .hero{position:relative; height:88vh; min-height:600px; display:flex; align-items:flex-end;}
+  .hero-bg{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(20,19,19,0.15) 0%, rgba(20,19,19,0.75) 100%),
+      url('https://images.unsplash.com/photo-1762028007806-751f2bef444a?fm=jpg&q=80&w=1800&auto=format&fit=crop');
+    background-size:cover; background-position:center;
+  }
+  .hero-content{position:relative; z-index:2; max-width:1240px; margin:0 auto; padding:0 24px 60px; width:100%; color:#fff;}
+  .hero-eyebrow{color:var(--gold-light); font-weight:700; letter-spacing:2px; text-transform:uppercase; font-size:0.8rem; margin-bottom:18px; display:block;}
+  .hero h1{font-size:3.2rem; font-weight:900; line-height:1.35; max-width:700px; margin-bottom:16px;}
+  .hero p{color:#e8e4da; font-size:1.05rem; max-width:560px; margin-bottom:36px; line-height:1.8;}
 
-/* زر السلة واضح وكبير */
-.cartBtn{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#c7a667;
-  color:#10202d;
-  font-size:28px;
-  padding:15px 20px;
-  border:none;
-  border-radius:50%;
-  cursor:pointer;
-  z-index:999;
-  box-shadow:0 0 10px #c7a667;
-}
+  /* شريط البحث العائم */
+  .search-bar{
+    background:#fff; border-radius:6px; box-shadow:0 20px 50px rgba(0,0,0,0.25);
+    padding:22px; display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr auto; gap:0;
+    max-width:1000px;
+  }
+  .search-field{padding:0 22px; border-left:1px solid var(--line);}
+  .search-field:first-child{padding-right:0;}
+  .search-field label{display:block; font-size:0.72rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;}
+  .search-field select, .search-field input{
+    border:none; font-family:inherit; font-size:0.95rem; font-weight:700; color:var(--ink);
+    width:100%; background:transparent;
+  }
+  .search-field select:focus, .search-field input:focus{outline:none;}
+  .search-btn{
+    background:var(--ink); color:#fff; border:none; padding:0 34px; font-weight:800;
+    font-size:0.95rem; cursor:pointer; border-radius:4px; font-family:inherit; transition:.3s;
+  }
+  .search-btn:hover{background:var(--gold);}
 
-/* Nav */
-.nav{display:flex;justify-content:center;gap:10px;padding:10px;background:#10202d;z-index:1;}
-.nav button{background:#c7a667;border:none;padding:8px 15px;color:#10202d;border-radius:20px;cursor:pointer;}
+  /* ===== قسم الإحصائيات ===== */
+  .stats-strip{
+    background:var(--ink); color:#fff; padding:36px 24px;
+  }
+  .stats-inner{max-width:1240px; margin:0 auto; display:flex; justify-content:space-around; flex-wrap:wrap; gap:24px; text-align:center;}
+  .stat b{display:block; font-size:2rem; font-weight:900; color:var(--gold-light);}
+  .stat small{color:#c9c5ba; font-size:0.82rem; letter-spacing:0.5px;}
 
-/* Container */
-.container{padding:15px;}
-.products{display:none;grid-template-columns:repeat(2,1fr);gap:15px;min-height:300px;}
-.products.active{display:grid;animation:fade 0.4s;}
-.card{background: rgba(16,32,45,0.85);padding:10px;border-radius:10px;text-align:center;transition:0.3s;border:1px solid #c7a667;}
-.card:hover{transform:scale(1.05);}
-.product-img{width:100%;height:120px;object-fit:cover;border-radius:10px;}
-.desc{font-size:12px;opacity:0.9;}
-.price{color:#c7a667;font-weight:bold;}
-button{margin-top:8px;padding:7px;border:none;background:#c7a667;color:#10202d;border-radius:5px;cursor:pointer;}
+  /* ===== أقسام عامة ===== */
+  section{padding:90px 24px;}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; max-width:1240px; margin:0 auto 46px; flex-wrap:wrap; gap:16px;}
+  .section-head .tag{color:var(--gold); font-weight:700; font-size:0.82rem; letter-spacing:1.5px; text-transform:uppercase;}
+  .section-head h2{font-size:2.1rem; font-weight:900; margin-top:10px;}
+  .section-head p.sub{color:var(--muted); max-width:480px; margin-top:10px; line-height:1.8;}
+  .see-all{font-weight:800; color:var(--ink); border-bottom:2px solid var(--gold); padding-bottom:4px; white-space:nowrap;}
 
-/* Cart Popup أسفل منتصف الشاشة */
-.cartPopup{
-  position:fixed; bottom:70px; left:50%; transform:translateX(-50%);
-  background:rgba(16,32,45,0.95); padding:15px; border-radius:15px;
-  z-index:998; border:1px solid #c7a667; width:95%; max-width:400px;
-  display:none;
-}
-.cartPopup h3{text-align:center;margin-bottom:10px;}
-.cartPopup #cartItems p{margin:5px 0;}
-.cartPopup #total{font-weight:bold;margin-top:10px;text-align:center;}
-.cartPopup input{width:100%;margin:5px 0;padding:8px;border-radius:5px;border:none;}
-.cartPopup button{width:32%;margin:3px 1%;}
+  /* ===== شبكة الشقق ===== */
+  .listings-grid{max-width:1240px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:32px;}
+  .listing-card{background:#fff; border-radius:6px; overflow:hidden; transition:.3s; box-shadow:0 4px 18px rgba(20,19,19,0.05);}
+  .listing-card:hover{transform:translateY(-6px); box-shadow:0 25px 45px rgba(20,19,19,0.12);}
+  .listing-photo{position:relative; height:230px; overflow:hidden;}
+  .listing-photo img{transition:.5s;}
+  .listing-card:hover .listing-photo img{transform:scale(1.08);}
+  .listing-badge{
+    position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.95);
+    padding:6px 14px; border-radius:20px; font-size:0.75rem; font-weight:800; color:var(--ink);
+  }
+  .listing-fav{
+    position:absolute; top:16px; left:16px; width:36px;height:36px; border-radius:50%;
+    background:rgba(20,19,19,0.35); display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:1rem;
+  }
+  .listing-body{padding:22px 22px 26px;}
+  .listing-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;}
+  .listing-top h3{font-size:1.12rem; font-weight:800;}
+  .listing-rating{display:flex; align-items:center; gap:5px; font-size:0.85rem; font-weight:800; color:var(--ink); white-space:nowrap;}
+  .listing-rating .star{color:var(--gold);}
+  .listing-loc{color:var(--muted); font-size:0.88rem; margin-bottom:14px; display:flex; align-items:center; gap:6px;}
+  .listing-features{display:flex; gap:16px; font-size:0.82rem; color:var(--muted); margin-bottom:18px; flex-wrap:wrap;}
+  .listing-features span{display:flex; align-items:center; gap:5px;}
+  .listing-footer{display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--line); padding-top:16px;}
+  .listing-price b{font-size:1.25rem; font-weight:900;}
+  .listing-price small{color:var(--muted); font-size:0.78rem;}
+  .book-btn{
+    background:transparent; border:1.5px solid var(--ink); padding:9px 20px; border-radius:3px;
+    font-weight:800; font-size:0.85rem; cursor:pointer; font-family:inherit; transition:.25s;
+  }
+  .book-btn:hover{background:var(--ink); color:#fff;}
 
-/* Toast */
-.toast{position:fixed;top:20px;right:20px;background:#c7a667;padding:10px;border-radius:5px;display:none;color:#10202d;}
+  /* ===== قسم مميز (شقة واحدة) ===== */
+  .featured{background:var(--sand-2);}
+  .featured-inner{max-width:1240px; margin:0 auto; display:grid; grid-template-columns:1.1fr 1fr; gap:50px; align-items:center;}
+  .featured-gallery{display:grid; grid-template-columns:1.4fr 1fr; grid-template-rows:1fr 1fr; gap:12px; height:440px;}
+  .featured-gallery .g1{grid-row:1/3; border-radius:6px; overflow:hidden;}
+  .featured-gallery .g2, .featured-gallery .g3{border-radius:6px; overflow:hidden;}
+  .featured-text .tag{color:var(--gold); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; font-size:0.8rem;}
+  .featured-text h2{font-size:2.2rem; font-weight:900; margin:14px 0 18px;}
+  .featured-text p{color:var(--muted); line-height:1.9; margin-bottom:26px;}
+  .amenities-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:30px;}
+  .amenity{display:flex; align-items:center; gap:10px; font-size:0.92rem; font-weight:600;}
+  .amenity .ic{width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--gold); font-size:1rem; flex-shrink:0;}
+  .featured-price{display:flex; align-items:center; justify-content:space-between; background:#fff; padding:20px 26px; border-radius:6px;}
+  .featured-price b{font-size:1.6rem; font-weight:900;}
+  .featured-price small{color:var(--muted); display:block; font-size:0.8rem;}
+  .featured-price .book-btn-lg{background:var(--ink); color:#fff; padding:14px 32px; border-radius:4px; font-weight:800; font-size:0.95rem; border:none; cursor:pointer; transition:.3s;}
+  .featured-price .book-btn-lg:hover{background:var(--gold);}
 
-/* Animations */
-@keyframes fade{0%{opacity:0;}100%{opacity:1;}}
+  /* ===== آراء العملاء ===== */
+  .testimonials{background:var(--ink); color:#fff;}
+  .testimonials .section-head h2, .testimonials .tag{color:#fff;}
+  .testimonials .tag{color:var(--gold-light);}
+  .test-grid{max-width:1240px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:28px;}
+  .test-card{background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:30px;}
+  .test-stars{color:var(--gold-light); margin-bottom:16px; font-size:0.95rem;}
+  .test-card p{color:#d8d5cc; line-height:1.8; margin-bottom:20px; font-size:0.95rem;}
+  .test-author{display:flex; align-items:center; gap:12px;}
+  .test-avatar{width:42px;height:42px;border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--ink); flex-shrink:0;}
+  .test-author b{display:block; font-size:0.92rem;}
+  .test-author small{color:#a8a49b; font-size:0.78rem;}
+
+  /* ===== فوتر ===== */
+  footer{background:var(--charcoal); color:#c9c5ba; padding:60px 24px 26px;}
+  .footer-grid{max-width:1240px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px;}
+  .footer-grid h4{color:#fff; font-weight:800; margin-bottom:18px; font-size:1rem;}
+  .footer-grid p, .footer-grid a{font-size:0.9rem; line-height:2.1; display:block; color:#c9c5ba;}
+  .footer-grid a:hover{color:var(--gold-light);}
+  .footer-bottom{max-width:1240px; margin:0 auto; padding-top:24px; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:0.82rem;}
+
+  @media(max-width:900px){
+    .nav-links{display:none;}
+    .burger{display:block;}
+    .hero h1{font-size:2.1rem;}
+    .search-bar{grid-template-columns:1fr 1fr; gap:14px; padding:18px;}
+    .search-field{border-left:none; padding:0;}
+    .search-btn{grid-column:1/3; padding:14px; margin-top:6px;}
+    .featured-inner{grid-template-columns:1fr;}
+    .featured-gallery{height:320px;}
+    .amenities-grid{grid-template-columns:1fr;}
+    .featured-price{flex-direction:column; gap:16px; align-items:stretch; text-align:center;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+  }
 </style>
 </head>
 <body>
 
-<!-- Loader -->
-<div id="loader">
-  <div class="snake"></div>
-  <div class="loader-text">شمبر</div>
+<header>
+  <div class="nav-wrap">
+    <div class="logo">NUZUL<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#listings">الشقق</a></li>
+      <li><a href="#featured">شقة مميزة</a></li>
+      <li><a href="#reviews">آراء النزلاء</a></li>
+      <li><a href="#contact">تواصل معنا</a></li>
+    </ul>
+    <a href="#listings" class="nav-btn">احجز الآن</a>
+    <button class="burger">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">إقامة فاخرة · حجز مباشر · بدون عمولات</span>
+    <h1>شقق مفروشة فاخرة للإيجار اليومي والشهري في الخرطوم</h1>
+    <p>اختر من بين نخبة من الشقق المفروشة بالكامل في أرقى أحياء الخرطوم، بمعايير فندقية وخدمة متابعة على مدار الساعة.</p>
+
+    <div class="search-bar">
+      <div class="search-field">
+        <label>المنطقة</label>
+        <select>
+          <option>الرياض، الخرطوم</option>
+          <option>الخرطوم 2</option>
+          <option>أركويت</option>
+          <option>بحري - الكدرو</option>
+          <option>المنشية</option>
+        </select>
+      </div>
+      <div class="search-field">
+        <label>تاريخ الوصول</label>
+        <input type="date">
+      </div>
+      <div class="search-field">
+        <label>تاريخ المغادرة</label>
+        <input type="date">
+      </div>
+      <div class="search-field">
+        <label>عدد الضيوف</label>
+        <select>
+          <option>1-2 أشخاص</option>
+          <option>3-4 أشخاص</option>
+          <option>5+ أشخاص</option>
+        </select>
+      </div>
+      <button class="search-btn" onclick="alert('جاري البحث عن أفضل الشقق المتاحة...')">بحث</button>
+    </div>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat"><b>36</b><small>شقة فاخرة متاحة</small></div>
+    <div class="stat"><b>4.8</b><small>متوسط تقييم النزلاء</small></div>
+    <div class="stat"><b>+1200</b><small>حجز تم إنجازه</small></div>
+    <div class="stat"><b>24/7</b><small>دعم فوري</small></div>
+  </div>
 </div>
 
-<header>✨ شمبر ✨</header>
+<section id="listings">
+  <div class="section-head">
+    <div>
+      <span class="tag">وحداتنا</span>
+      <h2>الشقق الأكثر طلبًا</h2>
+      <p class="sub">مجموعة مختارة من الشقق المفروشة الفاخرة الجاهزة للحجز الفوري.</p>
+    </div>
+    <a href="#" class="see-all">عرض كل الشقق ←</a>
+  </div>
 
-<div class="nav">
-<button onclick="switchSection('men')">رجالي</button>
-<button onclick="switchSection('women')">نسائي</button>
-<button onclick="switchSection('unisex')">للجنسين</button>
-</div>
+  <div class="listings-grid">
 
-<div class="container">
-<div id="men" class="products active"></div>
-<div id="women" class="products"></div>
-<div id="unisex" class="products"></div>
-</div>
+    <div class="listing-card">
+      <div class="listing-photo">
+        <img src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?fm=jpg&q=75&w=900&auto=format&fit=crop" alt="شقة فاخرة - الرياض">
+        <span class="listing-badge">الأكثر حجزًا</span>
+        <span class="listing-fav">♡</span>
+      </div>
+      <div class="listing-body">
+        <div class="listing-top">
+          <h3>جناح الرياض الفاخر</h3>
+          <div class="listing-rating"><span class="star">★</span> 4.9</div>
+        </div>
+        <div class="listing-loc">📍 حي الرياض، الخرطوم</div>
+        <div class="listing-features">
+          <span>🛏️ غرفتين</span>
+          <span>🛁 حمامين</span>
+          <span>📐 140 م²</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price"><b>$85</b> <small>لليلة الواحدة</small></div>
+          <button class="book-btn">احجز الآن</button>
+        </div>
+      </div>
+    </div>
 
-<!-- زر السلة -->
-<button class="cartBtn" onclick="toggleCart()">🛒</button>
+    <div class="listing-card">
+      <div class="listing-photo">
+        <img src="https://images.unsplash.com/photo-1562438668-bcf0ca6578f0?fm=jpg&q=75&w=900&auto=format&fit=crop" alt="شقة فاخرة - الخرطوم 2">
+        <span class="listing-fav">♡</span>
+      </div>
+      <div class="listing-body">
+        <div class="listing-top">
+          <h3>ستوديو الخرطوم 2</h3>
+          <div class="listing-rating"><span class="star">★</span> 4.7</div>
+        </div>
+        <div class="listing-loc">📍 الخرطوم 2</div>
+        <div class="listing-features">
+          <span>🛏️ غرفة واحدة</span>
+          <span>🛁 حمام واحد</span>
+          <span>📐 70 م²</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price"><b>$50</b> <small>لليلة الواحدة</small></div>
+          <button class="book-btn">احجز الآن</button>
+        </div>
+      </div>
+    </div>
 
-<!-- Cart Popup -->
-<div class="cartPopup" id="cartPopup">
-<h3>🛒 السلة</h3>
-<div id="cartItems"><p>السلة فارغة</p></div>
-<h4 id="total"></h4>
-<input type="text" id="userName" placeholder="اسمك">
-<input type="text" id="userPhone" placeholder="رقم الهاتف">
-<button onclick="sendOrder()">إتمام الطلب</button>
-<button onclick="toggleCart()">❌ إغلاق</button>
-</div>
+    <div class="listing-card">
+      <div class="listing-photo">
+        <img src="https://images.unsplash.com/photo-1696986681606-b156ccd761c5?fm=jpg&q=75&w=900&auto=format&fit=crop" alt="شقة فاخرة - أركويت">
+        <span class="listing-badge">جديد</span>
+        <span class="listing-fav">♡</span>
+      </div>
+      <div class="listing-body">
+        <div class="listing-top">
+          <h3>بنتهاوس أركويت</h3>
+          <div class="listing-rating"><span class="star">★</span> 5.0</div>
+        </div>
+        <div class="listing-loc">📍 حي أركويت، الخرطوم</div>
+        <div class="listing-features">
+          <span>🛏️ 3 غرف</span>
+          <span>🛁 3 حمامات</span>
+          <span>📐 210 م²</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price"><b>$140</b> <small>لليلة الواحدة</small></div>
+          <button class="book-btn">احجز الآن</button>
+        </div>
+      </div>
+    </div>
 
-<div class="toast" id="toast">تمت الإضافة ✅</div>
+    <div class="listing-card">
+      <div class="listing-photo">
+        <img src="https://images.unsplash.com/photo-1638885930125-85350348d266?fm=jpg&q=75&w=900&auto=format&fit=crop" alt="شقة فاخرة - بحري">
+        <span class="listing-fav">♡</span>
+      </div>
+      <div class="listing-body">
+        <div class="listing-top">
+          <h3>شقة النيل - بحري</h3>
+          <div class="listing-rating"><span class="star">★</span> 4.6</div>
+        </div>
+        <div class="listing-loc">📍 الكدرو، بحري</div>
+        <div class="listing-features">
+          <span>🛏️ غرفتين</span>
+          <span>🛁 حمامين</span>
+          <span>📐 130 م²</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price"><b>$70</b> <small>لليلة الواحدة</small></div>
+          <button class="book-btn">احجز الآن</button>
+        </div>
+      </div>
+    </div>
 
-<script>
-const products=[
-{ id:1,name:"باريس",price:50,image:"kimo1.jpg",desc:"عطر رجالي",category:"men"},
-{ id:2,name:"الاحلام",price:200,image:"kimo2.jpg",desc:"عطر رجالي",category:"men"},
-{ id:3,name:"هدوئ اليلي",price:170,image:"kimo3.jpg",desc:"عطر رجالي",category:"men"},
-{ id:4,name:"الاسد",price:130,image:"kimo4.jpg",desc:"عطر رجالي",category:"men"},
-{ id:5,name:"الفارس",price:80,image:"kimo5.jpg",desc:"عطر رجالي",category:"men"},
-{ id:6,name:"الانوثه",price:250,image:"kimo6.jpg",desc:"عطر نسائي",category:"women"},
-{ id:7,name:"الاميره",price:180,image:"kimo7.jpg",desc:"عطر نسائي",category:"women"},
-{ id:8,name:"زهرة الوتس",price:90,image:"kimo8.jpg",desc:"عطر نسائي",category:"women"},
-{ id:9,name:"رياح الجنوب",price:70,image:"kimo9.jpg",desc:"عطر نسائي",category:"women"},
-{ id:10,name:"البنفسج",price:65,image:"kimo10.jpg",desc:"عطر نسائي",category:"women"},
-{ id:11,name:"Tom Ford Oud",price:80,image:"kimo11.jpg",desc:"للجنسين",category:"unisex"},
-{ id:12,name:"Bleu de Chanel",price:60,image:"kimo12.jpg",desc:"للجنسين",category:"unisex"}
-];
+    <div class="listing-card">
+      <div class="listing-photo">
+        <img src="https://images.unsplash.com/photo-1638886043487-72d203fa66b6?fm=jpg&q=75&w=900&auto=format&fit=crop" alt="شقة فاخرة - المنشية">
+        <span class="listing-fav">♡</span>
+      </div>
+      <div class="listing-body">
+        <div class="listing-top">
+          <h3>جناح المنشية التنفيذي</h3>
+          <div class="listing-rating"><span class="star">★</span> 4.8</div>
+        </div>
+        <div class="listing-loc">📍 حي المنشية، الخرطوم</div>
+        <div class="listing-features">
+          <span>🛏️ غرفة واحدة</span>
+          <span>🛁 حمام واحد</span>
+          <span>📐 90 م²</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price"><b>$60</b> <small>لليلة الواحدة</small></div>
+          <button class="book-btn">احجز الآن</button>
+        </div>
+      </div>
+    </div>
 
-let cart=[];
+    <div class="listing-card">
+      <div class="listing-photo">
+        <img src="https://images.unsplash.com/photo-1762028007806-751f2bef444a?fm=jpg&q=75&w=900&auto=format&fit=crop" alt="مبنى شقق فاخر">
+        <span class="listing-fav">♡</span>
+      </div>
+      <div class="listing-body">
+        <div class="listing-top">
+          <h3>برج النيل السكني</h3>
+          <div class="listing-rating"><span class="star">★</span> 4.9</div>
+        </div>
+        <div class="listing-loc">📍 وسط الخرطوم</div>
+        <div class="listing-features">
+          <span>🛏️ 3 غرف</span>
+          <span>🛁 حمامين</span>
+          <span>📐 175 م²</span>
+        </div>
+        <div class="listing-footer">
+          <div class="listing-price"><b>$110</b> <small>لليلة الواحدة</small></div>
+          <button class="book-btn">احجز الآن</button>
+        </div>
+      </div>
+    </div>
 
-function saveCart(){localStorage.setItem("cart",JSON.stringify(cart));}
+  </div>
+</section>
 
-function renderProducts(){
-["men","women","unisex"].forEach(cat=>{
-let container=document.getElementById(cat);
-container.innerHTML="";
-products.filter(p=>p.category===cat).forEach(p=>{
-container.innerHTML+=`
-<div class="card">
-<img src="${p.image}" class="product-img">
-<h4>${p.name}</h4>
-<p class="desc">${p.desc}</p>
-<p class="price">${p.price}$</p>
-<button onclick="addToCart(${p.id})">إضافة</button>
-</div>`;
-});
-});
-}
+<section id="featured" class="featured">
+  <div class="featured-inner">
+    <div class="featured-gallery">
+      <div class="g1"><img src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?fm=jpg&q=80&w=900&auto=format&fit=crop" alt="صالة الشقة المميزة"></div>
+      <div class="g2"><img src="https://images.unsplash.com/photo-1562438668-bcf0ca6578f0?fm=jpg&q=80&w=700&auto=format&fit=crop" alt="غرفة النوم"></div>
+      <div class="g3"><img src="https://images.unsplash.com/photo-1696986681606-b156ccd761c5?fm=jpg&q=80&w=700&auto=format&fit=crop" alt="المطبخ"></div>
+    </div>
+    <div class="featured-text">
+      <span class="tag">شقة الأسبوع</span>
+      <h2>جناح الرياض الفاخر — 140 م²</h2>
+      <p>شقة فسيحة بغرفتي نوم بتصميم عصري راقٍ، تقع في قلب حي الرياض قريبًا من المطاعم والمراكز التجارية. مفروشة بالكامل مع مطبخ مجهز وإطلالة هادئة، ومناسبة للإقامات القصيرة والطويلة.</p>
+      <div class="amenities-grid">
+        <div class="amenity"><span class="ic">📶</span> واي فاي فائق السرعة</div>
+        <div class="amenity"><span class="ic">❄️</span> تكييف مركزي</div>
+        <div class="amenity"><span class="ic">🅿️</span> موقف سيارات خاص</div>
+        <div class="amenity"><span class="ic">🧺</span> غسالة ملابس</div>
+        <div class="amenity"><span class="ic">🔒</span> أمن على مدار الساعة</div>
+        <div class="amenity"><span class="ic">🍳</span> مطبخ مجهز بالكامل</div>
+      </div>
+      <div class="featured-price">
+        <div><b>$85</b><small>لليلة الواحدة، شامل الخدمات</small></div>
+        <button class="book-btn-lg" onclick="alert('تم إرسال طلب الحجز، سيتواصل معك فريقنا للتأكيد.')">احجز هذه الشقة</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-/* Cart */
-function displayCart(){
-let div=document.getElementById("cartItems");
-div.innerHTML="";
-if(cart.length===0){
-  div.innerHTML="<p>السلة فارغة</p>";
-  document.getElementById("total").innerText="";
-  return;
-}
-let total=0;
-cart.forEach(i=>{
-  total+=i.price*i.qty;
-  div.innerHTML+=`<p>📦 ${i.name} × ${i.qty} = ${i.price*i.qty}$</p>`;
-});
-document.getElementById("total").innerText="💵 الإجمالي: "+total+"$";
-}
+<section id="reviews" class="testimonials">
+  <div class="section-head">
+    <div>
+      <span class="tag">آراء النزلاء</span>
+      <h2>تجارب حقيقية من نزلائنا</h2>
+    </div>
+  </div>
+  <div class="test-grid">
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <p>"الشقة كانت نظيفة جدًا ومطابقة تمامًا للصور. الموقع في الرياض ممتاز وقريب من كل حاجة. التواصل مع الإدارة كان سريع وسهل."</p>
+      <div class="test-author">
+        <div class="test-avatar">م</div>
+        <div><b>محمد الطيب</b><small>حجز 4 ليالٍ - أكتوبر 2025</small></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <p>"جربنا بنتهاوس أركويت لمناسبة عائلية، المساحة واسعة والتجهيزات فندقية بمعنى الكلمة. سنكرر التجربة قريبًا إن شاء الله."</p>
+      <div class="test-author">
+        <div class="test-avatar">س</div>
+        <div><b>سارة عبدالله</b><small>حجز أسبوع كامل - نوفمبر 2025</small></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★☆</div>
+      <p>"خدمة ممتازة وسرعة في الرد، الشقة في بحري كانت هادئة ومريحة للعمل عن بعد. الواي فاي قوي جدًا وده كان مهم بالنسبة لي."</p>
+      <div class="test-author">
+        <div class="test-avatar">ع</div>
+        <div><b>عمر حسن</b><small>حجز شهر كامل - ديسمبر 2025</small></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-function toggleCart(){
-let c=document.getElementById("cartPopup");
-displayCart(); 
-c.style.display = c.style.display==="block" ? "none" : "block";
-}
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <h4>NUZUL للشقق الفاخرة</h4>
+      <p>منصة حجز شقق مفروشة فاخرة في الخرطوم، بمعايير فندقية وخدمة عملاء متاحة على مدار الساعة.</p>
+    </div>
+    <div>
+      <h4>روابط سريعة</h4>
+      <a href="#listings">تصفح الشقق</a>
+      <a href="#featured">شقة الأسبوع</a>
+      <a href="#reviews">آراء النزلاء</a>
+    </div>
+    <div>
+      <h4>تواصل معنا</h4>
+      <a href="tel:+249900000000">‎+249 900 000 000</a>
+      <a href="mailto:booking@nuzul.sd">booking@nuzul.sd</a>
+      <a href="#">حي الرياض، الخرطوم</a>
+    </div>
+    <div>
+      <h4>الدعم</h4>
+      <p>متاحون 24/7 عبر الهاتف والواتساب لمساعدتك في أي وقت.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 NUZUL. جميع الحقوق محفوظة.</span>
+    <span>سياسة الخصوصية • شروط الحجز والإلغاء</span>
+  </div>
+</footer>
 
-function addToCart(id){
-let product=products.find(p=>p.id===id);
-let item=cart.find(i=>i.id===id);
-if(item){item.qty++;}else{cart.push({...product,qty:1});}
-saveCart();
-showToast();
-}
-
-function showToast(){
-let t=document.getElementById("toast");
-t.style.display="block"; 
-setTimeout(()=>t.style.display="none",1500);
-}
-
-/* Loader & Switch Sections */
-const loader=document.getElementById("loader");
-function switchSection(cat){
-  loader.style.display="flex";
-  let randomTime=Math.floor(Math.random()*5000)+1000;
-  setTimeout(()=>{
-    document.querySelectorAll(".products").forEach(s=>s.classList.remove("active"));
-    document.getElementById(cat).classList.add("active");
-    loader.style.display="none";
-  }, randomTime);
-}
-
-/* Send Order via WhatsApp */
-function sendOrder(){
-  let name=document.getElementById("userName").value;
-  let phone=document.getElementById("userPhone").value;
-  if(!name||!phone){alert("املأ الاسم ورقم الهاتف");return;}
-  if(cart.length===0){alert("السلة فارغة");return;}
-  let message="طلب جديد من شمبر للعطور:\n";
-  message+="الاسم: "+name+"\nرقم الهاتف: "+phone+"\n\n";
-  let total=0;
-  cart.forEach(item=>{
-    message+=`• ${item.name} × ${item.qty} = ${item.price*item.qty}$\n`;
-    total+=item.price*item.qty;
-  });
-  message+="\n💵 المجموع: "+total+"$";
-  window.open("https://wa.me/249994501781?text="+encodeURIComponent(message),"_blank");
-
-  // مسح السلة بعد الطلب
-  cart=[];
-  saveCart();
-  displayCart();
-  toggleCart();
-}
-
-renderProducts();
-loader.style.display="none";
-</script>
 </body>
 </html>
